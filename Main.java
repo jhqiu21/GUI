@@ -29,7 +29,7 @@ public class Main extends Application {
     private void runPythonScript() {
         try {
             ProcessBuilder pb = new ProcessBuilder("python", "script.py");
-            pb.redirectErrorStream(true); // 把 stderr 合并进 stdout
+            pb.redirectErrorStream(true);
             Process process = pb.start();
 
             BufferedReader reader = new BufferedReader(
