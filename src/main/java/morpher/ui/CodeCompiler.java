@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class CodeCompiler {
     private CodeEditor codeEditor;
@@ -14,64 +17,64 @@ public class CodeCompiler {
     }
 
     public void runCCode() {
-        if (codeEditor.getCodeText().isBlank()) {
+        // TODO: improve the alert window
+        String code = codeEditor.getCodeText();
+        if (code == null || code.isBlank()) {
             AlertHelper.showError("Error", "No C code to run. Please upload or enter code.");
             return;
         }
 
-        File code = new File(System.getProperty("user.dir"), "model.c");
-        File exe = new File(System.getProperty("user.dir"), "modelExe");
+        Path codePath = null;
+        Path exePath = null;
 
         try {
-            compile(code, exe);
-            execute(exe);
+            codePath = Files.createTempFile("model", ".c");
+
+            boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
+            exePath = isWindows
+                    ? Files.createTempFile("modelExe", ".exe")
+                    : Files.createTempFile("modelExe", "");
+            Files.write(codePath, code.getBytes(StandardCharsets.UTF_8));
+
+            compile(codePath, exePath);
+            execute(exePath);
         } catch (IOException e) {
             AlertHelper.showError("I/O Error", e.getMessage());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             AlertHelper.showError("Interrupted", e.getMessage());
+        } catch (RuntimeException e) {
+            // AlertHelper.showError("Runtime Error", e.getMessage());
         } catch (Exception e) {
             AlertHelper.showError("Execution Error", e.getMessage());
+        } finally {
+            cleanupTempFiles(codePath, exePath);
         }
-        cleanupTempFiles(code, exe);
     }
 
-    private void compile(File code, File exe) throws IOException, InterruptedException {
-        try (FileWriter fw = new FileWriter(code)) {
-            fw.write(codeEditor.getCodeText());
-        }
-
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
-            exe = new File(System.getProperty("user.dir"), "tempExe.exe");
-        }
-
-        // Compile c code to generate execute file
+    private void compile(Path codePath, Path exePath) throws IOException, InterruptedException, RuntimeException {
         ProcessBuilder compilePb = new ProcessBuilder(
                 "gcc",
-                code.getAbsolutePath(),
+                codePath.toAbsolutePath().toString(),
                 "-o",
-                exe.getAbsolutePath()
+                exePath.toAbsolutePath().toString()
         );
-        compilePb.directory(new File(System.getProperty("user.dir")));
         compilePb.redirectErrorStream(true);
-
         Process compileProc = compilePb.start();
         String compileOutput = readProcessOutput(compileProc);
         int compileExit = compileProc.waitFor();
 
-        // Generate error message
         if (compileExit != 0) {
             AlertHelper.showError("Compile Error", compileOutput);
-            return;
+            throw new RuntimeException("Compilation failed");
         }
     }
 
-    private void execute(File exe) throws IOException, InterruptedException {
-        ProcessBuilder runPb = new ProcessBuilder(exe.getAbsolutePath());
-        runPb.directory(new File(System.getProperty("user.dir")));
+    private void execute(Path exePath) throws IOException, InterruptedException {
+        ProcessBuilder runPb = new ProcessBuilder(
+                exePath.toAbsolutePath().toString()
+        );
         runPb.redirectErrorStream(true);
-
-        // read output
         Process runProc = runPb.start();
         String runOutput = readProcessOutput(runProc);
         runProc.waitFor();
@@ -93,18 +96,12 @@ public class CodeCompiler {
         }
     }
 
-    private void cleanupTempFiles(File tempC, File exeFile) {
-        if (tempC.exists()) {
-            boolean deletedC = tempC.delete();
-            if (!deletedC) {
-                System.err.println("Warning: unable to delete temp file " + tempC.getAbsolutePath());
-            }
-        }
-        if (exeFile.exists()) {
-            boolean deletedExe = exeFile.delete();
-            if (!deletedExe) {
-                System.err.println("Warning: unable to delete temp file " + exeFile.getAbsolutePath());
-            }
+    private void cleanupTempFiles(Path codePath, Path exePath) {
+        try {
+            Files.deleteIfExists(codePath);
+            Files.deleteIfExists(exePath);
+        } catch (IOException e) {
+            System.err.println("Warning: unable to delete temporary file!");
         }
     }
 }
