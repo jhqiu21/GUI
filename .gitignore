@@ -4,3 +4,4 @@ out
 GUI.iml
 /.gradle
 /build
+/gradle
