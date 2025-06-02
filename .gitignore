@@ -1,7 +1,12 @@
+# MacOS custom attributes files created by Finder
 .DS_Store
-.idea
-out
-GUI.iml
+
+# IDEA files
+/.idea/
+/out/
+/*.iml
+
+# Gradle build files
 /.gradle
 /build
 /gradle
