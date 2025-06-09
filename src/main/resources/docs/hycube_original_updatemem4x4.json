@@ -1,35 +1,185 @@
-"CGRA" :{
-      "SUBMODS" :[
-          { "PATTERN" : "GRID",
-            "DIMS" : {"X" : 4,"Y" : 4},
-            "MODS" : [
-              {"X":0,"Y":0,"MOD":"PE_MEM","name" : "PE_MEM_X0_Y0"}, {"X":1,"Y":0,"MOD":"PE"},  {"X":2,"Y":0,"MOD":"PE"}, {"X":3,"Y":0,"MOD":"PE_MEM","name" : "PE_MEM_X3_Y0"},
-              {"X":0,"Y":1,"MOD":"PE_MEM","name" : "PE_MEM_X0_Y1"}, {"X":1,"Y":1,"MOD":"PE"},  {"X":2,"Y":1,"MOD":"PE"}, {"X":3,"Y":1,"MOD":"PE_MEM","name" : "PE_MEM_X3_Y1"},
-              {"X":0,"Y":2,"MOD":"PE_MEM","name" : "PE_MEM_X0_Y2"}, {"X":1,"Y":2,"MOD":"PE"},  {"X":2,"Y":2,"MOD":"PE"}, {"X":3,"Y":2,"MOD":"PE_MEM","name" : "PE_MEM_X3_Y2"},
-              {"X":0,"Y":3,"MOD":"PE_MEM","name" : "PE_MEM_X0_Y3"}, {"X":1,"Y":3,"MOD":"PE"},  {"X":2,"Y":3,"MOD":"PE"}, {"X":3,"Y":3,"MOD":"PE_MEM","name" : "PE_MEM_X3_Y3"}
-            ],
-            "CONNECTIONS" : [
-              {"FROM_X" : "X", "FROM_Y" : "Y", "FROM_PORT" : "NORTH_O", "TO_X" : "X", "TO_Y" : "Y-1", "TO_PORT" : "SOUTH_I"},
-              {"FROM_X" : "X", "FROM_Y" : "Y", "FROM_PORT" : "EAST_O",  "TO_X" : "X+1", "TO_Y" : "Y", "TO_PORT" : "WEST_I"},
-              {"FROM_X" : "X", "FROM_Y" : "Y", "FROM_PORT" : "WEST_O",  "TO_X" : "X-1", "TO_Y" : "Y", "TO_PORT" : "EAST_I"},
-              {"FROM_X" : "X", "FROM_Y" : "Y", "FROM_PORT" : "SOUTH_O", "TO_X" : "X", "TO_Y" : "Y+1", "TO_PORT" : "NORTH_I"}
-            ]
+{
+  "CGRA": {
+    "SUBMODS": [
+      {
+        "PATTERN": "GRID",
+        "DIMS": {
+          "X": 5,
+          "Y": 5
+        },
+        "MODS": [
+          {
+            "X": 0,
+            "Y": 0,
+            "MOD": "PE_MEM",
+            "name": "PE_MEM_X0_Y0"
           },
           {
-            "SPM_B0_WRAPPER" : [{"name" : "SPM_B0_WRAPPER_INS"}],
-            "SPM_B1_WRAPPER" : [{"name" : "SPM_B1_WRAPPER_INS"}],
-            "SPM_B2_WRAPPER" : [{"name" : "SPM_B2_WRAPPER_INS"}],
-            "SPM_B3_WRAPPER" : [{"name" : "SPM_B3_WRAPPER_INS"}]
+            "X": 1,
+            "Y": 0,
+            "MOD": "PE"
+          },
+          {
+            "X": 2,
+            "Y": 0,
+            "MOD": "PE"
+          },
+          {
+            "X": 3,
+            "Y": 0,
+            "MOD": "PE_MEM",
+            "name": "PE_MEM_X3_Y0"
+          },
+          {
+            "X": 0,
+            "Y": 1,
+            "MOD": "PE_MEM",
+            "name": "PE_MEM_X0_Y1"
+          },
+          {
+            "X": 1,
+            "Y": 1,
+            "MOD": "PE"
+          },
+          {
+            "X": 2,
+            "Y": 1,
+            "MOD": "PE"
+          },
+          {
+            "X": 3,
+            "Y": 1,
+            "MOD": "PE_MEM",
+            "name": "PE_MEM_X3_Y1"
+          },
+          {
+            "X": 0,
+            "Y": 2,
+            "MOD": "PE_MEM",
+            "name": "PE_MEM_X0_Y2"
+          },
+          {
+            "X": 1,
+            "Y": 2,
+            "MOD": "PE"
+          },
+          {
+            "X": 2,
+            "Y": 2,
+            "MOD": "PE"
+          },
+          {
+            "X": 3,
+            "Y": 2,
+            "MOD": "PE_MEM",
+            "name": "PE_MEM_X3_Y2"
+          },
+          {
+            "X": 0,
+            "Y": 3,
+            "MOD": "PE_MEM",
+            "name": "PE_MEM_X0_Y3"
+          },
+          {
+            "X": 1,
+            "Y": 3,
+            "MOD": "PE"
+          },
+          {
+            "X": 2,
+            "Y": 3,
+            "MOD": "PE"
+          },
+          {
+            "X": 3,
+            "Y": 3,
+            "MOD": "PE_MEM",
+            "name": "PE_MEM_X3_Y3"
           }
-      ],
-      "CONNECTIONS" : {
-        "PE_MEM_X0_Y0.MEMPORT" : ["SPM_B0_WRAPPER_INS.MEMPORT_P0"],
-        "PE_MEM_X0_Y1.MEMPORT" : ["SPM_B0_WRAPPER_INS.MEMPORT_P1"],
-        "PE_MEM_X0_Y2.MEMPORT" : ["SPM_B1_WRAPPER_INS.MEMPORT_P0"],
-        "PE_MEM_X0_Y3.MEMPORT" : ["SPM_B1_WRAPPER_INS.MEMPORT_P1"],
-        "PE_MEM_X3_Y0.MEMPORT" : ["SPM_B2_WRAPPER_INS.MEMPORT_P0"],
-        "PE_MEM_X3_Y1.MEMPORT" : ["SPM_B2_WRAPPER_INS.MEMPORT_P1"],
-        "PE_MEM_X3_Y2.MEMPORT" : ["SPM_B3_WRAPPER_INS.MEMPORT_P0"],
-        "PE_MEM_X3_Y3.MEMPORT" : ["SPM_B3_WRAPPER_INS.MEMPORT_P1"]
+        ],
+        "CONNECTIONS": [
+          {
+            "FROM_X": "X",
+            "FROM_Y": "Y",
+            "FROM_PORT": "NORTH_O",
+            "TO_X": "X",
+            "TO_Y": "Y-1",
+            "TO_PORT": "SOUTH_I"
+          },
+          {
+            "FROM_X": "X",
+            "FROM_Y": "Y",
+            "FROM_PORT": "EAST_O",
+            "TO_X": "X+1",
+            "TO_Y": "Y",
+            "TO_PORT": "WEST_I"
+          },
+          {
+            "FROM_X": "X",
+            "FROM_Y": "Y",
+            "FROM_PORT": "WEST_O",
+            "TO_X": "X-1",
+            "TO_Y": "Y",
+            "TO_PORT": "EAST_I"
+          },
+          {
+            "FROM_X": "X",
+            "FROM_Y": "Y",
+            "FROM_PORT": "SOUTH_O",
+            "TO_X": "X",
+            "TO_Y": "Y+1",
+            "TO_PORT": "NORTH_I"
+          }
+        ]
+      },
+      {
+        "SPM_B0_WRAPPER": [
+          {
+            "name": "SPM_B0_WRAPPER_INS"
+          }
+        ],
+        "SPM_B1_WRAPPER": [
+          {
+            "name": "SPM_B1_WRAPPER_INS"
+          }
+        ],
+        "SPM_B2_WRAPPER": [
+          {
+            "name": "SPM_B2_WRAPPER_INS"
+          }
+        ],
+        "SPM_B3_WRAPPER": [
+          {
+            "name": "SPM_B3_WRAPPER_INS"
+          }
+        ]
       }
+    ],
+    "CONNECTIONS": {
+      "PE_MEM_X0_Y0.MEMPORT": [
+        "SPM_B0_WRAPPER_INS.MEMPORT_P0"
+      ],
+      "PE_MEM_X0_Y1.MEMPORT": [
+        "SPM_B0_WRAPPER_INS.MEMPORT_P1"
+      ],
+      "PE_MEM_X0_Y2.MEMPORT": [
+        "SPM_B1_WRAPPER_INS.MEMPORT_P0"
+      ],
+      "PE_MEM_X0_Y3.MEMPORT": [
+        "SPM_B1_WRAPPER_INS.MEMPORT_P1"
+      ],
+      "PE_MEM_X3_Y0.MEMPORT": [
+        "SPM_B2_WRAPPER_INS.MEMPORT_P0"
+      ],
+      "PE_MEM_X3_Y1.MEMPORT": [
+        "SPM_B2_WRAPPER_INS.MEMPORT_P1"
+      ],
+      "PE_MEM_X3_Y2.MEMPORT": [
+        "SPM_B3_WRAPPER_INS.MEMPORT_P0"
+      ],
+      "PE_MEM_X3_Y3.MEMPORT": [
+        "SPM_B3_WRAPPER_INS.MEMPORT_P1"
+      ]
     }
+  }
+}

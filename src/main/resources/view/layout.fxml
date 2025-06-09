@@ -13,10 +13,16 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox alignment="TOP_CENTER" spacing="10" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="morpher.ui.Controller">
+<?import morpher.ui.CycleNavigator?>
+<?import morpher.ui.MappingVisualizer?>
 
+<HBox alignment="TOP_CENTER" spacing="10"
+      style="-fx-padding: 20;"
+      xmlns="http://javafx.com/javafx/22"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="morpher.ui.Controller">
 
-    <VBox prefHeight="432.0" prefWidth="200.0" spacing="15" HBox.hgrow="ALWAYS">
+    <VBox prefHeight="432.0" prefWidth="200.0" minWidth="200" maxWidth="200" spacing="15" HBox.hgrow="ALWAYS">
         <TitledPane collapsible="false" text="Pinned Applications">
             <VBox prefHeight="257.0" prefWidth="269.0" spacing="8">
                 <ListView fx:id="pinnedListView" prefHeight="204.0" prefWidth="248.0" />
@@ -36,9 +42,20 @@
     <VBox spacing="15" HBox.hgrow="ALWAYS">
         <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
             <Tab text="Visualization">
-                <ScrollPane fitToHeight="true" fitToWidth="true">
-                    <StackPane fx:id="visualizationPane" prefHeight="400" />
-                </ScrollPane>
+                <VBox spacing="6" alignment="CENTER">
+                    <ScrollPane fitToWidth="false" fitToHeight="false"
+                                hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
+                                VBox.vgrow="ALWAYS" fx:id="vizScroll">
+                        <content>
+                            <StackPane alignment="CENTER">
+                                <MappingVisualizer fx:id="mappingViz"/>
+                            </StackPane>
+                        </content>
+
+
+                    </ScrollPane>
+                    <CycleNavigator fx:id="cycleNav" />
+                </VBox>
             </Tab>
             <Tab text="C Code">
                 <VBox prefHeight="400" spacing="5" VBox.vgrow="ALWAYS">
@@ -57,7 +74,7 @@
     </VBox>
 
 
-    <VBox prefHeight="432.0" prefWidth="145.0" spacing="15" HBox.hgrow="ALWAYS">
+    <VBox prefHeight="432.0" prefWidth="145.0" minWidth="145" maxWidth="145" spacing="15" HBox.hgrow="ALWAYS">
         <VBox spacing="10">
             <Button fx:id="btnGenerate" onAction="#onGenerateAccelerator" prefHeight="30.0" prefWidth="133.0" text="Generate Accelerator" />
             <Button fx:id="btnUpload" onAction="#onUploadToDevice" prefHeight="30.0" prefWidth="133.0" text="Upload to Device" />

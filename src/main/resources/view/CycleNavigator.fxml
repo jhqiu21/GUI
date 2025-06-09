@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+
+<fx:root type="morpher.ui.CycleNavigator" xmlns:fx="http://javafx.com/fxml" fx:controller="morpher.ui.CycleNavigator">
+    <children>
+        <Button text="Prev" onAction="#onPrev"/>
+        <Button text="Next" onAction="#onNext"/>
+    </children>
+</fx:root>

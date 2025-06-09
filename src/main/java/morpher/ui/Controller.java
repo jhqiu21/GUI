@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 
 import javafx.scene.layout.StackPane;
+import morpher.ui.visualization.MappingLoader;
 
 import java.io.File;
 
@@ -13,11 +14,10 @@ import java.io.File;
 public class Controller {
     @FXML private ListView<String> pinnedListView;
     @FXML private StackPane codePane;
-    @FXML private Button btnSelectFile;
-    @FXML private Button btnGenerate;
-    @FXML private Button btnUpload;
     @FXML private StackPane dfgPane;
-    @FXML private StackPane visualizationPane;
+    @FXML private ScrollPane vizScroll;
+    @FXML private MappingVisualizer mappingViz;
+    @FXML private CycleNavigator cycleNav;
 
     private CodeEditor codeEditor;
     private DFGViewer dfgViewer;
@@ -34,6 +34,14 @@ public class Controller {
         modelUploader = new ModelUploader(codeEditor);
         dfgViewer.loadDFG("/docs/llist_PartPredDFG.pdf");
         pinnedApplications.loadApplications();
+        // load visualizer
+        try {
+            MappingLoader loader = new MappingLoader();
+            mappingViz.init(loader.fabric(), loader.cycles(), loader::opFor);
+            cycleNav.bind(mappingViz);
+        } catch (Exception e) {
+            AlertHelper.showError("Visualization Init Error", e.getMessage());
+        }
     }
 
     @FXML
