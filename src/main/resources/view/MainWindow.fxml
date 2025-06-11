@@ -15,7 +15,9 @@
 
 <?import morpher.ui.CycleNavigator?>
 <?import morpher.ui.MappingVisualizer?>
-、
+
+<?import javafx.scene.layout.AnchorPane?>
+
 <HBox alignment="TOP_CENTER" spacing="10"
       style="-fx-padding: 20;"
       xmlns="http://javafx.com/javafx/22"
@@ -63,10 +65,31 @@
                 </VBox>
             </Tab>
             <Tab text="DFG">
-                <ScrollPane fitToHeight="true" fitToWidth="true">
-                    <StackPane fx:id="dfgPane" prefHeight="363.0" prefWidth="305.0" />
-                </ScrollPane>
+                <content>
+                    <AnchorPane xmlns="http://javafx.com/javafx/22"
+                                xmlns:fx="http://javafx.com/fxml/1">
+                        <!-- 填满全区的 ScrollPane -->
+                        <ScrollPane fx:id="dfgScroll"
+                                    fitToWidth="true"  fitToHeight="true"
+                                    hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
+                                    AnchorPane.topAnchor="0"    AnchorPane.bottomAnchor="0"
+                                    AnchorPane.leftAnchor="0"   AnchorPane.rightAnchor="0">
+                            <content>
+                                <!-- 这是拿到 PDF ImageView 的容器 -->
+                                <StackPane fx:id="dfgPane"/>
+                            </content>
+                        </ScrollPane>
+
+                        <!-- 锚点到右上角的按钮组 -->
+                        <HBox spacing="10" alignment="CENTER"
+                              AnchorPane.topAnchor="10" AnchorPane.rightAnchor="15">
+                            <Button text="Zoom In"  onAction="#onZoomIn"/>
+                            <Button text="Zoom Out" onAction="#onZoomOut"/>
+                        </HBox>
+                    </AnchorPane>
+                </content>
             </Tab>
+
             <Tab text="Fabric Debugger">
                 <Pane fx:id="debuggerPane" prefHeight="400.0" />
             </Tab>

@@ -2,9 +2,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Button?>
 
-<fx:root type="morpher.ui.CycleNavigator" xmlns:fx="http://javafx.com/fxml" fx:controller="morpher.ui.CycleNavigator">
-    <children>
-        <Button text="Prev" onAction="#onPrev"/>
-        <Button text="Next" onAction="#onNext"/>
-    </children>
-</fx:root>
+<HBox xmlns:fx="http://javafx.com/fxml" fx:id="cycleNav" spacing="10">
+    <Button text="Prev" fx:id="btnPrev"/>
+    <Button text="Next" fx:id="btnNext"/>
+</HBox>

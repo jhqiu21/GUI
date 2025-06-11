@@ -63,4 +63,14 @@ public class Controller {
     private void onGenerateAccelerator() {
         codeCompiler.runCCode();
     }
+
+    @FXML
+    private void onZoomIn() {
+        dfgViewer.zoomIn();
+    }
+
+    @FXML
+    private void onZoomOut() {
+        dfgViewer.zoomOut();
+    }
 }

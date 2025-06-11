@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import morpher.ui.MappingVisualizer?>
+<?import javafx.scene.layout.StackPane?>
 
-<MappingVisualizer xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:id="viz" />
+<StackPane xmlns:fx="http://javafx.com/fxml" fx:id="mappingViz"/>
