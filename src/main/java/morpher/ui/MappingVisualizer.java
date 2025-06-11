@@ -15,11 +15,10 @@ import java.util.List;
 
 public class MappingVisualizer extends StackPane {
     private final GridPane grid = new GridPane();
-    private final StackPane wrapper = new StackPane();
     private FabricMatrix fabric;
     private List<Cycle> cycles;
     private OpResolver opResolver;
-    private GridBuilder gridBuilder = new GridBuilder(grid, wrapper);
+    private GridBuilder gridBuilder;
 
     private int idx = 0;
 
@@ -29,9 +28,8 @@ public class MappingVisualizer extends StackPane {
     }
 
     public MappingVisualizer() {
-        wrapper.getChildren().add(grid);
-        wrapper.setAlignment(Pos.CENTER);
-        getChildren().add(wrapper);
+        this.gridBuilder = new GridBuilder(grid, this);
+        getChildren().add(grid);
         setAlignment(Pos.CENTER);
         gridBuilder.buildGrid(1, 1);
         setPosition();
@@ -84,6 +82,11 @@ public class MappingVisualizer extends StackPane {
             Label lab = new Label(text);
             lab.setFont(Font.font(12));
             cell.getChildren().add(lab);
+        }
+
+        ScrollPane sp = gridBuilder.findScrollPane(this);
+        if (sp != null) {
+            javafx.application.Platform.runLater(() -> gridBuilder.hookCentering(sp));
         }
     }
 

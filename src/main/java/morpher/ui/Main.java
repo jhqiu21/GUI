@@ -12,7 +12,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(
                 getClass().getClassLoader().getResource("view/MainWindow.fxml")
         );
-        Scene scene = new Scene(root, 1000, 600);
+        Scene scene = new Scene(root, 1100, 600);
         primaryStage.setTitle("Morpher GUI");
         primaryStage.setScene(scene);
         primaryStage.show();

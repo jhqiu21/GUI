@@ -12,16 +12,10 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-
-<?import morpher.ui.CycleNavigator?>
-<?import morpher.ui.MappingVisualizer?>
-
 <?import javafx.scene.layout.AnchorPane?>
 
-<HBox alignment="TOP_CENTER" spacing="10"
-      style="-fx-padding: 20;"
-      xmlns="http://javafx.com/javafx/22"
-      xmlns:fx="http://javafx.com/fxml/1"
+<HBox alignment="TOP_CENTER" spacing="10" style="-fx-padding: 20;"
+      xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="morpher.ui.Controller">
 
     <VBox prefHeight="432.0" prefWidth="200.0" minWidth="200" maxWidth="200" spacing="15" HBox.hgrow="ALWAYS">
@@ -49,14 +43,10 @@
                                 hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
                                 VBox.vgrow="ALWAYS" fx:id="vizScroll">
                         <content>
-                            <StackPane alignment="CENTER">
-                                <MappingVisualizer fx:id="mappingViz"/>
-                            </StackPane>
+                            <StackPane fx:id="mappingViz" prefWidth="600" prefHeight="300" alignment="CENTER"/>
                         </content>
-
-
                     </ScrollPane>
-                    <CycleNavigator fx:id="cycleNav" />
+                    <HBox fx:id="cycleNav" alignment="CENTER"/>
                 </VBox>
             </Tab>
             <Tab text="Source Code">
@@ -68,23 +58,20 @@
                 <content>
                     <AnchorPane xmlns="http://javafx.com/javafx/22"
                                 xmlns:fx="http://javafx.com/fxml/1">
-                        <!-- 填满全区的 ScrollPane -->
                         <ScrollPane fx:id="dfgScroll"
                                     fitToWidth="true"  fitToHeight="true"
                                     hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
                                     AnchorPane.topAnchor="0"    AnchorPane.bottomAnchor="0"
                                     AnchorPane.leftAnchor="0"   AnchorPane.rightAnchor="0">
                             <content>
-                                <!-- 这是拿到 PDF ImageView 的容器 -->
                                 <StackPane fx:id="dfgPane"/>
                             </content>
                         </ScrollPane>
 
-                        <!-- 锚点到右上角的按钮组 -->
                         <HBox spacing="10" alignment="CENTER"
                               AnchorPane.topAnchor="10" AnchorPane.rightAnchor="15">
-                            <Button text="Zoom In"  onAction="#onZoomIn"/>
-                            <Button text="Zoom Out" onAction="#onZoomOut"/>
+                            <Button text="+"  onAction="#onZoomIn"/>
+                            <Button text="-" onAction="#onZoomOut"/>
                         </HBox>
                     </AnchorPane>
                 </content>
