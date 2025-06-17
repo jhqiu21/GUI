@@ -42,7 +42,7 @@
     <VBox styleClass="middle" HBox.hgrow="ALWAYS">
         <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
             <Tab text="Visualization">
-                <VBox>
+                <VBox VBox.vgrow="ALWAYS">
                     <HBox prefHeight="50" fx:id="cycleNav" styleClass="visualization-bar"/>
                     <ScrollPane fx:id="vizScroll" styleClass="visualization-pane"
                                 hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
