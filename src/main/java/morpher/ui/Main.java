@@ -8,14 +8,16 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(
                 getClass().getClassLoader().getResource("view/MainWindow.fxml")
         );
         Scene scene = new Scene(root, 1100, 600);
-        primaryStage.setTitle("Morpher GUI");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        stage.setMinWidth(810);
+        stage.setMinHeight(520);
+        stage.setTitle("Morpher");
+        stage.setScene(scene);
+        stage.show();
     }
 
     public static void main(String[] args) {

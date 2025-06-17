@@ -14,7 +14,6 @@ public class GridBuilder {
     private final GridPane grid;
     private final StackPane wrapper;
     private static final int CELL_SIZE = 60;
-    private static final int LABEL_SIZE = 30;
 
     public GridBuilder(GridPane grid, StackPane wrapper) {
         this.grid = grid;
@@ -22,8 +21,8 @@ public class GridBuilder {
     }
 
     public void buildGrid(int rows, int cols) {
-        grid.setHgap(2);
-        grid.setVgap(2);
+        grid.setHgap(20);
+        grid.setVgap(20);
         grid.add(blankCell(), 0, 0);
 
         for (int col = 0; col < cols; col++) {
@@ -40,23 +39,23 @@ public class GridBuilder {
 
     private StackPane createCell() {
         StackPane cell = new StackPane();
-        Rectangle bg = new Rectangle(CELL_SIZE, CELL_SIZE, Color.web("#f0f0f0"));
-        bg.setStroke(Color.GRAY);
+        Rectangle bg = new Rectangle(CELL_SIZE, CELL_SIZE);
+        bg.getStyleClass().add("grid-cell");
         cell.getChildren().add(bg);
         return cell;
     }
 
     private StackPane blankCell() {
         StackPane s = new StackPane();
-        s.setMinSize(LABEL_SIZE, LABEL_SIZE);
+        s.getStyleClass().add("grid-blank");
         return s;
     }
 
     private StackPane headerLabel(String txt) {
         StackPane s = new StackPane();
-        s.setMinSize(LABEL_SIZE, LABEL_SIZE);
+        s.getStyleClass().add("grid-header");
         Label l = new Label(txt);
-        l.setFont(Font.font(12));
+        l.getStyleClass().add("grid-header");
         s.getChildren().add(l);
         return s;
     }
@@ -80,7 +79,6 @@ public class GridBuilder {
         }
         return (ScrollPane) n;
     }
-
 
     public void hookCentering(ScrollPane sp) {
         sp.setFitToWidth(false);

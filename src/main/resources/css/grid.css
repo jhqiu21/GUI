@@ -1,0 +1,22 @@
+/* Grid visualization styles */
+.grid-cell {
+    -fx-fill: #1e1e1e;
+    -fx-stroke: #3c3c3c;
+    -fx-stroke-width: 1;
+}
+.grid-header {
+    -fx-pref-width: 30;
+    -fx-pref-height: 30;
+    -fx-alignment: center;
+    -fx-text-fill: #d4d4d4;        /* light gray text */
+    -fx-font-size: 12;
+    -fx-background-color: transparent;
+}
+.grid-blank {
+    -fx-pref-width: 30;
+    -fx-pref-height: 30;
+    -fx-background-color: transparent;
+}
+.grid-cell.fade {
+    -fx-opacity: 0.3;
+}

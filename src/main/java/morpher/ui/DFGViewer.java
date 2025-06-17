@@ -2,6 +2,7 @@ package morpher.ui;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ScrollEvent;
@@ -19,8 +20,10 @@ public class DFGViewer {
     private StackPane container;
     private ImageView imageView;
     private double zoomFactor = 1.0;
+    private double width = 600;
     public DFGViewer(StackPane container) {
         this.container = container;
+        container.setAlignment(Pos.CENTER);
     }
 
     public void loadDFG(String resourcePath) {
@@ -45,7 +48,7 @@ public class DFGViewer {
                 Image fxImage = SwingFXUtils.toFXImage(bufferedImage, null);
                 imageView = new ImageView(fxImage);
                 imageView.setPreserveRatio(true);
-                imageView.setFitWidth(600);
+                imageView.setFitWidth(width);
                 container.getChildren().add(imageView);
             }
         } catch (Exception e) {
@@ -55,13 +58,12 @@ public class DFGViewer {
 
     private void applyZoom() {
         if (imageView != null) {
-            imageView.setScaleX(zoomFactor);
-            imageView.setScaleY(zoomFactor);
+            imageView.setFitWidth(width * zoomFactor);
         }
     }
 
     public void zoomIn() {
-        zoomFactor *= 1.2;
+        zoomFactor *= 1.25;
         applyZoom();
     }
 

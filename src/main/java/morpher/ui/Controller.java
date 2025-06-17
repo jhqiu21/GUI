@@ -1,5 +1,6 @@
 package morpher.ui;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -9,8 +10,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import morpher.ui.visualization.MappingLoader;
 
-import java.io.File;
-
 
 public class Controller {
     @FXML private ListView<String> pinnedListView;
@@ -18,6 +17,7 @@ public class Controller {
     @FXML private StackPane dfgPane;
     @FXML private StackPane mappingViz;
     @FXML private HBox cycleNav;
+    @FXML private ScrollPane dfgScroll;
 
     private CodeEditor codeEditor;
     private DFGViewer dfgViewer;
@@ -35,15 +35,13 @@ public class Controller {
         codeCompiler = new CodeCompiler(codeEditor);
         pinnedApplications = new PinnedApplications(pinnedListView);
         modelUploader = new ModelUploader(codeEditor);
-        dfgViewer.loadDFG("/docs/llist_PartPredDFG.pdf");
+        dfgViewer.loadDFG("/docs/gemm_systolic_r.pdf");
         pinnedApplications.loadApplications();
 
         mappingVisualizer = new MappingVisualizer();
         mappingViz.getChildren().add(mappingVisualizer);
         cycleNavigator = new CycleNavigator();
         cycleNav.getChildren().add(cycleNavigator);
-
-        System.out.println("Holder children = " + mappingVisualizer.getChildren());
 
         // load visualizer
         try {
@@ -53,6 +51,11 @@ public class Controller {
         } catch (Exception e) {
             AlertHelper.showError("Visualization Init Error", e.getMessage());
         }
+
+        Platform.runLater(() -> {
+            dfgScroll.setHvalue(0.5);
+            dfgScroll.setVvalue(0.5);
+        });
     }
 
     @FXML
@@ -78,10 +81,18 @@ public class Controller {
     @FXML
     private void onZoomIn() {
         dfgViewer.zoomIn();
+        Platform.runLater(() -> {
+            dfgScroll.setHvalue(0.5);
+            dfgScroll.setVvalue(0.5);
+        });
     }
 
     @FXML
     private void onZoomOut() {
         dfgViewer.zoomOut();
+        Platform.runLater(() -> {
+            dfgScroll.setHvalue(0.5);
+            dfgScroll.setVvalue(0.5);
+        });
     }
 }

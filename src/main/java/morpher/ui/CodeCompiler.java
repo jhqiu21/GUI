@@ -20,7 +20,7 @@ public class CodeCompiler {
         // TODO: improve the alert window
         String code = codeEditor.getCodeText();
         if (code == null || code.isBlank()) {
-            AlertHelper.showError("Error", "No C code to run. Please upload or enter code.");
+            AlertHelper.showError("Error", "No Source code to run. Please upload or enter code.");
             return;
         }
 

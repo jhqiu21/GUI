@@ -5,6 +5,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import morpher.ui.visualization.Cycle;
 import morpher.ui.visualization.FabricMatrix;
@@ -81,6 +82,7 @@ public class MappingVisualizer extends StackPane {
             String text = m.nodeIdx() + "\n" + opResolver.opOf(m.nodeIdx());
             Label lab = new Label(text);
             lab.setFont(Font.font(12));
+            lab.setTextFill(Color.WHITE);
             cell.getChildren().add(lab);
         }
 
@@ -102,6 +104,10 @@ public class MappingVisualizer extends StackPane {
             idx--;
             render();
         }
+    }
+
+    public int getCurrentCycle() {
+        return idx;
     }
 }
 
