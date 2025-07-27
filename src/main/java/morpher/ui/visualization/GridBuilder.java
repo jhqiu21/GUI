@@ -21,8 +21,8 @@ public class GridBuilder {
     }
 
     public void buildGrid(int rows, int cols) {
-        grid.setHgap(20);
-        grid.setVgap(20);
+        grid.setHgap(40);
+        grid.setVgap(40);
         grid.add(blankCell(), 0, 0);
 
         for (int col = 0; col < cols; col++) {

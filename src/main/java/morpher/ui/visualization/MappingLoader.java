@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,25 +21,36 @@ import java.util.regex.Pattern;
 
 public class MappingLoader {
     private static MappingLoader instance;
-    private static final Pattern TUPLE = Pattern.compile("\\((\\d+)\\s*,\\s*(\\d+)\\)\\s*->\\s*(\\d+)");
-
-    // save dimension of the matrix
     private final FabricMatrix fabric;
-    // store each cycle
-    private final List<Cycle> cycles;
+    private final Map<Coordinate, List<Mapping>> mappingTable;
     private final Map<Integer, String> operationMappings;
+    private int numOfCycle;
 
     public MappingLoader() throws Exception {
         this.fabric = loadDims(); // parse config file to get dimension of matrix
         this.operationMappings = loadOperations(); // get operation mappings from xml file
-        this.cycles = loadCycles(); // load the number of cycles and returns a list
+        this.mappingTable = loadMappingTable();
     }
 
-    public FabricMatrix fabric() {
+    /**
+     * @return dimension of fabric matrix
+     */
+    public FabricMatrix getFabricMatrix() {
         return fabric;
     }
-    public List<Cycle> cycles() {
-        return cycles;
+
+
+    public Map<Coordinate, List<Mapping>> getMappingTable() {
+        return mappingTable;
+    }
+
+    //FIXME Remove this part if using prog file op. info.
+    public Map<Integer, String> getOperationMappings() {
+        return operationMappings;
+    }
+
+    public int getNumOfCycle() {
+        return numOfCycle;
     }
 
     public static MappingLoader get() {
@@ -52,16 +64,40 @@ public class MappingLoader {
         return instance;
     }
 
+    //FIXME Remove this part if using prog file op. info.
+    /**
+     * Return operation for a specific node.
+     * @param index of node.
+     * @return Operation of node.
+     */
+    public String getOpFor(int index)  {
+        if (index == -1) {
+            return "NAN";
+        }
+        return operationMappings.getOrDefault(index, "NAN");
+    }
+
+    /**
+     * Load the dimension of fabric matrix from configuration file.
+     * @return Fabric matrix object represents dimension.
+     * @throws IOException
+     */
     private FabricMatrix loadDims() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         try (InputStream input = getClass().getResourceAsStream("/docs/hycube_original_updatemem4x4.json")) {
             JsonNode root = mapper.readTree(input);
             JsonNode dims = root.at("/CGRA/SUBMODS/0/DIMS");
-            System.out.println("Dims OK!");
             return new FabricMatrix(dims.get("X").asInt(), dims.get("Y").asInt());
         }
     }
 
+
+    //FIXME Remove this part if using prog file op. info.
+    /**
+     * Load operations for each PE from xml config file
+     * @return Map of PE index and operation.
+     * @throws Exception
+     */
     private Map<Integer,String> loadOperations() throws Exception {
         Map<Integer,String> map = new HashMap<>();
         try (InputStream is = getClass().getResourceAsStream("/docs/gemm_systolic_1.xml")) {
@@ -74,19 +110,23 @@ public class MappingLoader {
                 map.put(idx, op);
             }
         }
-        System.out.println("XML OK! Size: " + map.size());
-
         return map;
     }
 
-    private List<Cycle> loadCycles() throws IOException {
-        Map<Integer,List<Mapping>> tmp = new HashMap<>();
+    /**
+     * Load Mapping information for each cycle.
+     * @return a list of mapping information for each cycle, sorted in ascending order of cycle index.
+     * @throws IOException
+     */
+    private Map<Coordinate, List<Mapping>> loadMappingTable() throws IOException {
+        Map<Integer, List<Mapping>> tmp = new HashMap<>();
         try (InputStream src = getClass().getResourceAsStream("/docs/mapping.txt");
              BufferedReader buffer = new BufferedReader(new InputStreamReader(src, StandardCharsets.UTF_8))) {
             String line;
-            int curr = 0;
+            int curr = -1;
             while ((line = buffer.readLine()) != null) {
                 line = line.trim();
+
                 if (line.startsWith("cycle")) {
                     String num = line.replace("cycle", "").replace(":", "").trim();
                     curr = Integer.parseInt(num);
@@ -94,25 +134,25 @@ public class MappingLoader {
                 }
 
                 if (curr >= 0) {
-                    Matcher m = TUPLE.matcher(line);
-                    while (m.find()) {
-                        int x = Integer.parseInt(m.group(1));
-                        int y = Integer.parseInt(m.group(2));
-                        int idx = Integer.parseInt(m.group(3));
-
-                        tmp.computeIfAbsent(curr, k -> new ArrayList<>()).add(new Mapping(x, y, idx));
-                    }
+                    tmp.computeIfAbsent(curr, k -> new ArrayList<>()).addAll(Mapping.parseLine(line));
                 }
             }
+            this.numOfCycle = curr;
         }
-        List<Cycle> list = new ArrayList<>();
-        tmp.keySet().stream().sorted().forEach(c -> list.add(new Cycle(c, tmp.get(c))));
-        System.out.println("Cycles OK! Size: " + list.size());
-        return list;
+
+        Map<Coordinate, List<Mapping>> mapTable = new HashMap<>();
+
+        int listSize = numOfCycle + 1;
+        for (var entry : tmp.entrySet()) {
+            int cycleId = entry.getKey();
+            for (Mapping m : entry.getValue()) {
+                mapTable.computeIfAbsent(m.coordinate(), k -> initList(listSize)).set(cycleId, m);
+            }
+        }
+        return mapTable;
     }
 
-    public String opFor(int idx)  {
-        return operationMappings.getOrDefault(idx, "?");
+    private static <T> List<T> initList(int size) {
+        return new ArrayList<>(Collections.nCopies(size, null));
     }
-
 }

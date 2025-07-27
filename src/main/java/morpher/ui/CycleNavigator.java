@@ -12,7 +12,7 @@ public class CycleNavigator extends HBox {
     private final Button btnNext = new Button("Next");
     private final Label  lblCycle = new Label("Cycle 0");
 
-    private MappingVisualizer mv;
+    private FabricMatrixVisualizer mv;
 
     public CycleNavigator() {
         HBox.setHgrow(lblCycle, Priority.ALWAYS);
@@ -27,7 +27,7 @@ public class CycleNavigator extends HBox {
         btnNext.setOnAction(e -> { if (mv != null) { mv.next();  update(); } });
     }
 
-    public void bind(MappingVisualizer mv) {
+    public void bind(FabricMatrixVisualizer mv) {
         this.mv = mv;
         update();
     }

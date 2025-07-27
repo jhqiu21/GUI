@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import morpher.ui.visualization.MappingLoader;
+import morpher.ui.visualization.PELoader;
 
 
 public class Controller {
@@ -24,7 +25,7 @@ public class Controller {
     private CodeCompiler codeCompiler;
     private PinnedApplications pinnedApplications;
     private ModelUploader modelUploader;
-    private MappingVisualizer mappingVisualizer;
+    private FabricMatrixVisualizer fabricMatrixVisualizer;
     private CycleNavigator cycleNavigator;
 
 
@@ -38,16 +39,18 @@ public class Controller {
         dfgViewer.loadDFG("/docs/gemm_systolic_r.pdf");
         pinnedApplications.loadApplications();
 
-        mappingVisualizer = new MappingVisualizer();
-        mappingViz.getChildren().add(mappingVisualizer);
+        fabricMatrixVisualizer = new FabricMatrixVisualizer();
+        mappingViz.getChildren().add(fabricMatrixVisualizer);
         cycleNavigator = new CycleNavigator();
         cycleNav.getChildren().add(cycleNavigator);
 
         // load visualizer
         try {
-            MappingLoader loader = new MappingLoader();
-            mappingVisualizer.init(loader.fabric(), loader.cycles(), loader::opFor);
-            cycleNavigator.bind(mappingVisualizer);
+            // TODO: Refactor, set CycleLoader here!
+            MappingLoader mLoader = new MappingLoader();
+            PELoader peLoader = PELoader.get();
+            fabricMatrixVisualizer.init(mLoader.getFabricMatrix(), peLoader.getNodes());
+            cycleNavigator.bind(fabricMatrixVisualizer);
         } catch (Exception e) {
             AlertHelper.showError("Visualization Init Error", e.getMessage());
         }
@@ -56,6 +59,8 @@ public class Controller {
             dfgScroll.setHvalue(0.5);
             dfgScroll.setVvalue(0.5);
         });
+
+
     }
 
     @FXML
