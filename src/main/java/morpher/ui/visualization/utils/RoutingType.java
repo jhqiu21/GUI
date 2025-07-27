@@ -21,22 +21,4 @@ public enum RoutingType {
             return OTHER;
         }
     }
-
-
-//    public static boolean isDirection(RoutingType rt) {
-//        return (rt == SOUTH || rt == NORTH || rt == EAST || rt == WEST);
-//    }
-//
-//    public static Direction routingTypeConverter(RoutingType rt) {
-//        if (isDirection(rt)) {
-//            return switch (rt) {
-//                case NORTH -> Direction.NORTH;
-//                case SOUTH -> Direction.SOUTH;
-//                case WEST -> Direction.WEST;
-//                case EAST -> Direction.EAST;
-//                default -> null;
-//            };
-//        }
-//        return null;
-//    }
 }
