@@ -28,6 +28,7 @@ public record PE(Coordinate coord, List<Mapping> mappings, List<Routing> routing
         return (k < mappings.size()) ? mappings.get(k) : null;
     }
 
+    //NOTE NOP will return empty string
     public String opCodeAt(int k) {
         Routing rt = routingAt(k);
         if (rt == null || rt.getOpCode().equalsIgnoreCase("NOP")) {
