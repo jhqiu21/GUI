@@ -32,11 +32,13 @@ public class Controller {
     @FXML
     public void initialize() {
         codeEditor = new CodeEditor(codePane);
-        dfgViewer = new DFGViewer(dfgPane);
-        codeCompiler = new CodeCompiler(codeEditor);
-        pinnedApplications = new PinnedApplications(pinnedListView);
+        codeCompiler = new CodeCompiler(codeEditor, this);
         modelUploader = new ModelUploader(codeEditor);
-        dfgViewer.loadDFG("/docs/gemm_systolic_r.pdf");
+
+        dfgViewer = new DFGViewer(dfgPane);
+        dfgViewer.loadDFG();
+
+        pinnedApplications = new PinnedApplications(pinnedListView);
         pinnedApplications.loadApplications();
 
         fabricMatrixVisualizer = new FabricMatrixVisualizer();
@@ -46,7 +48,6 @@ public class Controller {
 
         // load visualizer
         try {
-            // TODO: Refactor, set CycleLoader here!
             MappingLoader mLoader = new MappingLoader();
             PELoader peLoader = PELoader.get();
             fabricMatrixVisualizer.init(mLoader.getFabricMatrix(), peLoader.getNodes());
@@ -59,7 +60,6 @@ public class Controller {
             dfgScroll.setHvalue(0.5);
             dfgScroll.setVvalue(0.5);
         });
-
 
     }
 
@@ -80,7 +80,7 @@ public class Controller {
 
     @FXML
     private void onGenerateAccelerator() {
-        codeCompiler.runCCode();
+        codeCompiler.runSourceCode();
     }
 
     @FXML
@@ -99,5 +99,9 @@ public class Controller {
             dfgScroll.setHvalue(0.5);
             dfgScroll.setVvalue(0.5);
         });
+    }
+
+    public FabricMatrixVisualizer getFabricMatrixVisualizer() {
+        return this.fabricMatrixVisualizer;
     }
 }

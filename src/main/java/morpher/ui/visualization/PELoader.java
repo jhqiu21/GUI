@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class PELoader {
     private static PELoader instance;
-    private final Map<Coordinate, PE> nodes;
+    private Map<Coordinate, PE> nodes;
 
     private PELoader() {
         this.nodes = loadPEs();
@@ -27,6 +27,10 @@ public class PELoader {
         return instance;
     }
 
+    public void refresh() {
+        this.nodes = loadPEs();
+    }
+
     private Map<Coordinate, PE> loadPEs() {
         Map<Coordinate, List<Mapping>> mapTable = MappingLoader.get().getMappingTable();
         int totalCycles = MappingLoader.get().getNumOfCycle();
@@ -38,18 +42,20 @@ public class PELoader {
 
         Map<Coordinate, PE> nodeMap = new LinkedHashMap<>();
         for (Coordinate c : coords) {
-            List<Mapping> mappingList = mapTable.getOrDefault(c, initList(totalCycles));
+            List<Mapping> mappingList = new ArrayList<>(mapTable.getOrDefault(c, initList(totalCycles)));
             RoutingBatch routingBatch = routingMap.get(c);
             List<Routing> routingList = initList(totalCycles);
             int jumpStart = -1;
             int jumpEnd = -1;
 
             if (routingBatch != null) {
-                routingList = routingBatch.routes();
+                routingList = new ArrayList<>(routingBatch.routes());
                 jumpStart = routingBatch.jumpStart();
                 jumpEnd   = routingBatch.jumpEnd();
             }
-
+            if (c.row() == 0 && c.col() == 0) {
+                System.out.println(mappingList.toString() + " " + routingList.toString());
+            }
             nodeMap.put(c, new PE(c, mappingList, routingList, jumpStart, jumpEnd));
         }
         return nodeMap;

@@ -68,4 +68,8 @@ public class Routing {
             }
         }
     }
+
+    public String toString() {
+        return opCode;
+    }
 }

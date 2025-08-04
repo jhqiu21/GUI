@@ -23,17 +23,17 @@ import static morpher.ui.visualization.Routing.parseRoutingLine;
 public class RoutingLoader {
     private static final Logger LOGGER = Logger.getLogger(RoutingLoader.class.getName());
     private static final Pattern FILE_NAME = Pattern.compile("PE-Y(\\d+)X(\\d+)\\.prog");
+    private static final Pattern OPCODE_PATTERN = Pattern.compile(
+            "^\\s*operation\\s*:\\s*([A-Z]+)", Pattern.CASE_INSENSITIVE);
     private static final Pattern JUMP_PATTERN = Pattern.compile(
-            "^\\s*(?:inst|operation):\\s*jump\\s*\\[\\s*(\\d+)\\s*,\\s*(\\d+)\\s*]\\s*$",
+            "^\\s*operation:\\s*jump\\s*\\[\\s*(\\d+)\\s*,\\s*(\\d+)\\s*]\\s*$",
             Pattern.CASE_INSENSITIVE);
-    private static final Pattern OPCODE_PAT =
-            Pattern.compile("^\\s*(?:inst|operation)\\s*:\\s*([A-Z]+)",
-                    Pattern.CASE_INSENSITIVE);
-    private final Map<Coordinate, RoutingBatch> routingBatches;
+    private static final Path DEMO_URL = getDemoDirectory();
+    private Map<Coordinate, RoutingBatch> routingBatches;
     private static RoutingLoader instance;
 
     private RoutingLoader() {
-        this.routingBatches = loadRouting();
+        this.routingBatches = loadRouting(DEMO_URL);
     }
 
     public static RoutingLoader get() {
@@ -51,11 +51,13 @@ public class RoutingLoader {
         return routingBatches;
     }
 
-    private Map<Coordinate, RoutingBatch> loadRouting() {
+    public void refresh(Path p) {
+        this.routingBatches = loadRouting(p);
+    }
+
+    private Map<Coordinate, RoutingBatch> loadRouting(Path docsDir) {
         Map<Coordinate, RoutingBatch> routingMap = new LinkedHashMap<>();
         try {
-            URI uri = Objects.requireNonNull(getClass().getResource("/docs/single_sided_array_add_4x4/")).toURI();
-            Path docsDir = Paths.get(uri);
             try (Stream<Path> files = Files.list(docsDir)) {
                 files.filter(p -> p.getFileName().toString().matches("PE-Y\\d+X\\d+\\.prog"))
                         .forEach(path -> parseRoutingFile(path, routingMap));
@@ -78,7 +80,6 @@ public class RoutingLoader {
         int row = Integer.parseInt(fm.group(1));
         int col = Integer.parseInt(fm.group(2));
         Coordinate coord = new Coordinate(row, col);
-        System.out.println(coord);
         List<Routing> routeingList = new ArrayList<>();
         int cycle = 0;
         int jumpStart = -1;
@@ -96,10 +97,8 @@ public class RoutingLoader {
                 }
 
                 if (line.toLowerCase().startsWith("operation:")) {
-                    Matcher m = OPCODE_PAT.matcher(line);
+                    Matcher m = OPCODE_PATTERN.matcher(line);
                     opCode = m.find() ? m.group(1).toUpperCase() : "";
-                    System.out.println(opCode + "-C" + cycle);
-
                     if (opCode.equalsIgnoreCase("JUMP")) {
                         Matcher jm = JUMP_PATTERN.matcher(line);
                         if (jm.find()) {
@@ -119,11 +118,13 @@ public class RoutingLoader {
 
 
                 if (inSwitch && line.startsWith("}")) {
-
                     // routeingList.set(cycle, routes.isEmpty() ? null : routes);
                     routeingList.add(routes);
                     cycle++;
                     inSwitch = false;
+                    if (row == 0 && col == 0) {
+                        System.out.println("RoutingLoader: " + opCode);
+                    }
                     continue;
                 }
 
@@ -131,6 +132,7 @@ public class RoutingLoader {
                     parseRoutingLine(line, routes);
                 }
             }
+
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, "Cannot parse {0}: {1}", new Object[]{fileName, ex.getMessage()});
         }
@@ -139,5 +141,15 @@ public class RoutingLoader {
                 Collections.unmodifiableList(new ArrayList<>(routeingList)),
                 jumpStart, jumpEnd);
         routingBatchMap.put(coord, routingBatch);
+    }
+
+    private static Path getDemoDirectory() {
+        try {
+            URI uri = Objects.requireNonNull(
+                    RoutingLoader.class.getResource("/docs/single_sided_array_add_4x4/")).toURI();
+            return Paths.get(uri);
+        } catch (Exception e) {
+            throw new IllegalStateException("Demo directory not found", e);
+        }
     }
 }

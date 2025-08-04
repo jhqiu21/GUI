@@ -1,10 +1,6 @@
 package morpher.ui.visualization;
 
-import morpher.ui.visualization.utils.Direction;
-
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Optional;
 
 public record PE(Coordinate coord, List<Mapping> mappings, List<Routing> routings, int loopStart, int loopEnd) {
     /**

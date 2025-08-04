@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class CodeEditor {
     private CodeArea codeEditor;
-    private File currentFile;
+    private String type;
 
     public CodeEditor(StackPane container) {
         codeEditor = new CodeArea();
@@ -20,8 +20,9 @@ public class CodeEditor {
         container.getChildren().add(new VirtualizedScrollPane<>(codeEditor));
     }
 
-    public void loadCCode(File file) {
-        this.currentFile = file;
+    public void loadCode(File file) {
+        String fileName = file.getName().toLowerCase();
+        type = fileName.endsWith(".c") ? "c" : "python";
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder sb = new StringBuilder();
             String line;
@@ -36,5 +37,9 @@ public class CodeEditor {
 
     public String getCodeText() {
         return codeEditor.getText();
+    }
+
+    public String getType() {
+        return type;
     }
 }

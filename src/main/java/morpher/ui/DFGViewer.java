@@ -18,6 +18,7 @@ public class DFGViewer {
     @FXML
     private StackPane container;
     private ImageView imageView;
+    String resourcePath = "/docs/gemm_systolic_r.pdf";
     private double zoomFactor = 1.0;
     private double width = 600;
     public DFGViewer(StackPane container) {
@@ -25,7 +26,7 @@ public class DFGViewer {
         container.setAlignment(Pos.CENTER);
     }
 
-    public void loadDFG(String resourcePath) {
+    public void loadDFG() {
         try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
             if (is == null) {
                 System.err.println("PDF resource not found: " + resourcePath);

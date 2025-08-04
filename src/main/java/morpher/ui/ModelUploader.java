@@ -15,13 +15,14 @@ public class ModelUploader {
     public void upload(Node source) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Select Source File");
-        chooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("C Files", "*.c")
+        chooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("C Script", "*.c"),
+                new FileChooser.ExtensionFilter("Python Script", "*.py")
         );
         Window window = source.getScene().getWindow();
         File file = chooser.showOpenDialog(window);
         if (file != null) {
-            codeEditor.loadCCode(file);
+            codeEditor.loadCode(file);
         }
     }
 }

@@ -1,5 +1,6 @@
 package morpher.ui;
 
+import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -19,8 +20,10 @@ import morpher.ui.visualization.FabricMatrix;
 import morpher.ui.visualization.GridBuilder;
 import morpher.ui.visualization.MappingLoader;
 import morpher.ui.visualization.PE;
+import morpher.ui.visualization.PELoader;
 import morpher.ui.visualization.PortRouting;
 import morpher.ui.visualization.Routing;
+import morpher.ui.visualization.RoutingLoader;
 import morpher.ui.visualization.utils.Direction;
 
 import java.util.EnumMap;
@@ -68,6 +71,8 @@ public class FabricMatrixVisualizer extends StackPane {
     }
 
     public void init(FabricMatrix fabric, Map<Coordinate,PE> nodes) {
+        System.out.println("init called nodes@" + System.identityHashCode(nodes));
+
         this.fabric = fabric;
         this.nodes = nodes;
         this.curr = 0;
@@ -77,12 +82,21 @@ public class FabricMatrixVisualizer extends StackPane {
     }
 
 
+    public static void reload(FabricMatrixVisualizer viz, java.nio.file.Path targetDir) {
+        RoutingLoader.get().refresh(targetDir);
+        PELoader.get().refresh();
+        Platform.runLater(() -> {
+            FabricMatrix fabric = MappingLoader.get().getFabricMatrix();
+            Map<Coordinate, PE> nodes = PELoader.get().getNodes();
+            viz.init(fabric, nodes);
+        });
+    }
+
     private void render() {
         if (fabric == null || nodes == null) {
             return;
         }
-
-        grid.getChildren().removeIf(n -> n instanceof Path || n instanceof Line);
+        grid.getChildren().removeIf(n -> n instanceof Label || n instanceof Path || n instanceof Line);
         grid.getChildren().forEach(node -> {
             if (node instanceof StackPane sp && sp.getChildren().size() > 1) {
                 sp.getChildren().remove(1);
@@ -96,6 +110,9 @@ public class FabricMatrixVisualizer extends StackPane {
 
                 PE node = nodes.get(coord);
                 Label lab = new Label(node.labelAt(curr));
+                if (node.coord().row() == 0 && node.coord().col() == 0) {
+                    System.out.println(node.coord() + " " + node.labelAt(curr));
+                }
                 lab.setTextFill(Color.WHITE);
                 lab.setFont(Font.font(12));
                 cell.getChildren().add(lab);
@@ -103,9 +120,6 @@ public class FabricMatrixVisualizer extends StackPane {
                 drawRoutes(node);
             }
         }
-
-
-
 
         ScrollPane sp = gridBuilder.findScrollPane(this);
         if (sp != null) {
@@ -153,7 +167,6 @@ public class FabricMatrixVisualizer extends StackPane {
             }
         }
     }
-
 
     private void drawDirectLine(Coordinate src, Direction srcDir, Coordinate dest, Direction destDir) {
         double[] srcPos = getCoordinate(src, srcDir);
@@ -211,7 +224,6 @@ public class FabricMatrixVisualizer extends StackPane {
         }
         return pos;
     }
-
 
     /**
      * Add arrow head for the given path.

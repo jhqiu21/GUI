@@ -88,9 +88,6 @@
                     </AnchorPane>
                 </content>
             </Tab>
-            <Tab text="Fabric Debugger">
-                <Pane fx:id="debuggerPane" prefHeight="400.0" />
-            </Tab>
         </TabPane>
     </VBox>
 
