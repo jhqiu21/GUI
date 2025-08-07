@@ -1,5 +1,7 @@
 # Morpher GUI
 
+![morpher.png](img/morpher.png)
+
 ## Getting Started:
 Follow these steps to build and run the Morpher GUI on your local machine. 
 
