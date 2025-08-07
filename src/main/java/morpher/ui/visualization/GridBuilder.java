@@ -8,6 +8,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Build and visualize the Fabric Matrix
+ */
 public class GridBuilder {
     private final GridPane grid;
     private final StackPane wrapper;
@@ -35,6 +38,10 @@ public class GridBuilder {
         }
     }
 
+    /**
+     * Creates a single styled grid cell.
+     * @return a StackPane representing one grid cell with a styled background
+     */
     private StackPane createCell() {
         StackPane cell = new StackPane();
         Rectangle bg = new Rectangle(CELL_SIZE, CELL_SIZE);
@@ -43,12 +50,24 @@ public class GridBuilder {
         return cell;
     }
 
+    /**
+     * Creates a blank StackPane to serve as a placeholder cell
+     * at the intersection of the X and Y axes.
+     * @return a styled StackPane representing an empty placeholder cell.
+     */
     private StackPane blankCell() {
         StackPane s = new StackPane();
         s.getStyleClass().add("grid-blank");
         return s;
     }
 
+    /**
+     * Creates a styled header cell containing the given text, typically used
+     * as a label for the horizontal or vertical axis in a grid or chart.
+     *
+     * @param txt the text to display in the header label
+     * @return a StackPane representing the styled header cell
+     */
     private StackPane headerLabel(String txt) {
         StackPane s = new StackPane();
         s.getStyleClass().add("grid-header");
@@ -57,6 +76,7 @@ public class GridBuilder {
         s.getChildren().add(l);
         return s;
     }
+
 
     public StackPane getCell(int row, int col) {
         int uiRow = row + 1;
@@ -71,6 +91,12 @@ public class GridBuilder {
         throw new IllegalArgumentException("Cell not found: (" + row + "," + col + ")");
     }
 
+    /**
+     * Traverses up the scene graph from the given Node to find the nearest
+     * ancestor that is an instance of ScrollPane.
+     * @param n the starting Node to begin the search from
+     * @return the closest ancestor
+     */
     public ScrollPane findScrollPane(javafx.scene.Node n) {
         while (n != null && !(n instanceof ScrollPane)) {
             n = n.getParent();
@@ -78,6 +104,11 @@ public class GridBuilder {
         return (ScrollPane) n;
     }
 
+    /**
+     * Adjusts the padding of the wrapper so that the content in the ScrollPane is centered
+     * within the viewport whenever the viewport size or grid layout bounds change.
+     * @param sp whose content should be centered
+     */
     public void hookCentering(ScrollPane sp) {
         sp.setFitToWidth(false);
         sp.setFitToHeight(false);

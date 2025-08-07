@@ -37,7 +37,6 @@ public class MappingLoader {
         return fabric;
     }
 
-
     public Map<Coordinate, List<Mapping>> getMappingTable() {
         return mappingTable;
     }
@@ -153,4 +152,5 @@ public class MappingLoader {
     private static <T> List<T> initList(int size) {
         return new ArrayList<>(Collections.nCopies(size, null));
     }
+
 }

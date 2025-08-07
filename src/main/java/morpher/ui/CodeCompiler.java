@@ -8,6 +8,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+/**
+ * Handles the compilation and execution of source code submitted through a CodeEditor.
+ *
+ * Supports both C and Python code.
+ * C scripts are compiled and executed using gcc.
+ * Python scripts are interpreted using the python command.
+ *
+ * Program outputs or errors are reported via AlertHelper, and compiled Python
+ * outputs (e.g., .prog files) are passed to FabricMatrixVisualizer for UI updates.
+ */
 public class CodeCompiler {
     private CodeEditor codeEditor;
     private final Controller controller;
@@ -17,6 +27,12 @@ public class CodeCompiler {
         this.controller = controller;
     }
 
+    /**
+     * Entry point for compiling and running the source code based on the selected language.
+     *
+     * Dispatches to either {@link #runCCode(String)} or {@link #runPythonCode(String)},
+     * depending on the file type selected in CodeEditor.
+     */
     public void runSourceCode() {
         String code = codeEditor.getCodeText();
         String type = codeEditor.getType();
@@ -38,7 +54,12 @@ public class CodeCompiler {
         // TODO Call update() here to update ui
     }
 
-
+    /**
+     * Compiles and executes the provided C code using the system’s gcc compiler.
+     * Temporary source and executable files are created and deleted automatically.
+     *
+     * @param code the C source code to compile and run
+     */
     private void runCCode(String code) {
         Path codePath = null;
         Path exePath = null;
@@ -67,6 +88,16 @@ public class CodeCompiler {
             cleanupTempFiles(codePath, exePath);
         }
     }
+
+    /**
+     * Invokes gcc to compile the C source file to a native executable.
+     *
+     * @param codePath the path to the C source file
+     * @param exePath the target executable path
+     * @throws IOException if file I/O fails
+     * @throws InterruptedException if the compilation process is interrupted
+     * @throws RuntimeException if compilation fails (non-zero exit code)
+     */
     private void compile(Path codePath, Path exePath) throws IOException, InterruptedException, RuntimeException {
         ProcessBuilder compilePb = new ProcessBuilder(
                 "gcc",
@@ -85,6 +116,13 @@ public class CodeCompiler {
         }
     }
 
+    /**
+     * Executes the compiled C binary and shows its output in an info dialog.
+     *
+     * @param exePath the path to the executable
+     * @throws IOException if execution fails
+     * @throws InterruptedException if the process is interrupted
+     */
     private void execute(Path exePath) throws IOException, InterruptedException {
         ProcessBuilder runPb = new ProcessBuilder(
                 exePath.toAbsolutePath().toString()
@@ -99,6 +137,13 @@ public class CodeCompiler {
         }
     }
 
+    /**
+     * Reads and returns the combined output (stdout and stderr) of a running process.
+     *
+     * @param proc the process to read from
+     * @return the complete output of the process
+     * @throws IOException if the stream cannot be read
+     */
     private String readProcessOutput(Process proc) throws IOException {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(proc.getInputStream()))) {
@@ -111,6 +156,12 @@ public class CodeCompiler {
         }
     }
 
+    /**
+     * Deletes the temporary source and executable files used in the C compilation process.
+     *
+     * @param codePath path to the temporary C source file
+     * @param exePath path to the compiled executable file
+     */
     private void cleanupTempFiles(Path codePath, Path exePath) {
         try {
             Files.deleteIfExists(codePath);
@@ -120,6 +171,14 @@ public class CodeCompiler {
         }
     }
 
+    /**
+     * Executes the given Python code and optionally reloads `.prog` files produced by it.
+     *
+     * The Python script is written to a temporary directory, and executed using the system
+     * python interpreter. All `.prog` files produced are collected and passed to the FabricMatrixVisualizer.
+     *
+     * @param code the Python code to run
+     */
     private void runPythonCode(String code) {
         try {
             Path workDir = Files.createTempDirectory("morpherPyRun");
@@ -149,6 +208,13 @@ public class CodeCompiler {
         }
     }
 
+    /**
+     * Copies all `.prog` files from the source directory to the destination directory.
+     *
+     * @param srcPath the directory to copy from
+     * @param dstPath the directory to copy to
+     * @throws IOException if copying fails
+     */
     private static void copyRecursively(Path srcPath, Path dstPath) throws IOException {
         if (!Files.exists(srcPath)) {
             return;
@@ -167,6 +233,12 @@ public class CodeCompiler {
         }
     }
 
+    /**
+     * Recursively deletes all files and subdirectories under the given path.
+     *
+     * @param path the root directory or file to delete
+     * @throws IOException if deletion fails
+     */
     private static void deleteRecursively(Path path) throws IOException {
         if (!Files.exists(path)) {
             return;

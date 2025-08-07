@@ -33,6 +33,15 @@ import java.util.Map;
 import static morpher.ui.visualization.Coordinate.getNeighbourCoordinate;
 import static morpher.ui.visualization.utils.Direction.getOppositeDir;
 
+/**
+ * A JavaFX component that visualizes a fabric matrix composed of processing elements (PEs).
+ *
+ * It renders the PE grid using a GridPane, displays their state at each cycle,
+ * and draws routing connections dynamically between PEs. This class also supports stepping
+ * forward and backward through computation cycles.
+ *
+ * Use init(FabricMatrix, Map) to load a new matrix, and next(), prev() to navigate the cycles.
+ */
 public class FabricMatrixVisualizer extends StackPane {
     private final GridPane grid = new GridPane();
     private final GridBuilder gridBuilder = new GridBuilder(grid, this);;
@@ -41,11 +50,6 @@ public class FabricMatrixVisualizer extends StackPane {
     private int curr;
     private int totalCycle = MappingLoader.get().getNumOfCycle();
 
-    @FunctionalInterface
-    public interface OpResolver {
-        String opOf(int nodeIdx);
-    }
-
     public FabricMatrixVisualizer() {
         getChildren().add(grid);
         setAlignment(Pos.CENTER);
@@ -53,23 +57,17 @@ public class FabricMatrixVisualizer extends StackPane {
         // setPosition();
     }
 
-
-    private void setPosition() {
-        sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-                ScrollPane sp = gridBuilder.findScrollPane(this);
-                if (sp != null) {
-                    gridBuilder.hookCentering(sp);
-                }
-            }
-        });
-    }
-
     public FabricMatrixVisualizer(FabricMatrix fabric, Map<Coordinate,PE> nodes) {
         this();
         init(fabric, nodes);
     }
 
+    /**
+     * Initializes the visualizer with a new fabric and PE mapping.
+     *
+     * @param fabric the fabric layout (rows x cols)
+     * @param nodes  the PE node map with per-cycle data
+     */
     public void init(FabricMatrix fabric, Map<Coordinate,PE> nodes) {
         System.out.println("init called nodes@" + System.identityHashCode(nodes));
 
@@ -81,7 +79,13 @@ public class FabricMatrixVisualizer extends StackPane {
         render();
     }
 
-
+    /**
+     * Reloads the visualizer after new routing and mapping data has been loaded
+     * from the provided directory.
+     *
+     * @param viz the visualizer to refresh
+     * @param targetDir the directory containing .prog files
+     */
     public static void reload(FabricMatrixVisualizer viz, java.nio.file.Path targetDir) {
         RoutingLoader.get().refresh(targetDir);
         PELoader.get().refresh();
@@ -92,6 +96,10 @@ public class FabricMatrixVisualizer extends StackPane {
         });
     }
 
+    /**
+     * Renders the current state of the grid, including labels and routing paths,
+     * based on the current cycle.
+     */
     private void render() {
         if (fabric == null || nodes == null) {
             return;
@@ -127,6 +135,10 @@ public class FabricMatrixVisualizer extends StackPane {
         }
     }
 
+    /**
+     * Renders the current state of the grid, including labels and routing paths,
+     * based on the current cycle.
+     */
     public void next() {
         if (nodes != null && curr < totalCycle) {
             this.curr++;
@@ -134,6 +146,9 @@ public class FabricMatrixVisualizer extends StackPane {
         }
     }
 
+    /**
+     * Goes back to the previous cycle, if available, and re-renders the grid.
+     */
     public void prev() {
         if (nodes != null && curr > 0) {
             this.curr--;
@@ -145,6 +160,11 @@ public class FabricMatrixVisualizer extends StackPane {
         return curr;
     }
 
+    /**
+     * Draws directional routing lines for the given PE at the current cycle.
+     *
+     * @param pe the processing element to draw routes for
+     */
     private void drawRoutes(PE pe) {
         Routing r = pe.routingAt(curr);
         Coordinate currCoord = pe.coord();
@@ -168,6 +188,14 @@ public class FabricMatrixVisualizer extends StackPane {
         }
     }
 
+    /**
+     * Draws a direct line between two PE ports with arrowhead, indicating data flow from src to dest.
+     *
+     * @param src source PE coordinate
+     * @param srcDir port side on source PE
+     * @param dest destination PE coordinate
+     * @param destDir port side on destination PE
+     */
     private void drawDirectLine(Coordinate src, Direction srcDir, Coordinate dest, Direction destDir) {
         double[] srcPos = getCoordinate(src, srcDir);
         double[] destPos = getCoordinate(dest, destDir);
@@ -226,8 +254,9 @@ public class FabricMatrixVisualizer extends StackPane {
     }
 
     /**
-     * Add arrow head for the given path.
-     * @param p path to add arrow.
+     * Adds an arrowhead to the end of a given path, pointing in the direction of data flow.
+     *
+     * @param p the path to modify
      */
     private void addArrowHead(Path p) {
         List<PathElement> els = p.getElements();
@@ -261,6 +290,24 @@ public class FabricMatrixVisualizer extends StackPane {
         els.add(new LineTo(ax1, ay1));
         els.add(new MoveTo(ex, ey));
         els.add(new LineTo(ax2, ay2));
+    }
+
+    /**
+     * Attaches a listener to the visualizer's scene property to center the grid in its
+     * containing ScrollPane once the scene becomes available.
+     *
+     * This method ensures that the grid is visually centered within the scroll pane
+     * when the component is first added to a scene.
+     */
+    private void setPosition() {
+        sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                ScrollPane sp = gridBuilder.findScrollPane(this);
+                if (sp != null) {
+                    gridBuilder.hookCentering(sp);
+                }
+            }
+        });
     }
 }
 

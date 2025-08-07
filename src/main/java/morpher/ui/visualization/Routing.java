@@ -9,10 +9,17 @@ import java.util.regex.Pattern;
 
 import static morpher.ui.visualization.utils.Direction.getDirection;
 
+/**
+ * Represents the routing configuration of a Processing Element (PE) for a specific cycle.
+ *
+ * A Routing includes an opCode representing the instruction executed,
+ * and a mapping of directional ports to PortRouting, which describes the input and output connections.
+ */
 public class Routing {
     private static final Pattern PORT_LINE = Pattern.compile("(\\w+)\\s*->\\s*(\\w+)");
     private EnumMap<Direction, PortRouting> ports;
     private String opCode;
+
     public Routing() {
         this.ports = new EnumMap<Direction, PortRouting>(Direction.class);
         this.opCode = "";
@@ -40,10 +47,6 @@ public class Routing {
         ports.put(d, pr.withOut(type));
     }
 
-    public boolean isEmpty() {
-        return ports.isEmpty();
-    }
-
     public static void parseRoutingLine(String line, Routing routes) {
         Matcher rm = PORT_LINE.matcher(line);
         while (rm.find()) {
@@ -67,9 +70,5 @@ public class Routing {
                 routes.setOutput(outputDir, rt);
             }
         }
-    }
-
-    public String toString() {
-        return opCode;
     }
 }

@@ -10,8 +10,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * A simple source code editor component based on {@link CodeArea}, with support for line numbers,
+ * file loading, and language type detection.
+ *
+ * The editor currently supports C and Python code. It automatically infers the file type
+ * based on the file extension when loading code from disk.
+ */
 public class CodeEditor {
+    /** The rich text area used for editing code, with syntax and line number support. */
     private CodeArea codeEditor;
+    /** The detected code type, either "c" or "python". */
     private String type;
 
     public CodeEditor(StackPane container) {

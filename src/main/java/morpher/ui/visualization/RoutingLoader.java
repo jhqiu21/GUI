@@ -20,6 +20,13 @@ import java.util.stream.Stream;
 
 import static morpher.ui.visualization.Routing.parseRoutingLine;
 
+/**
+ * Singleton class responsible for loading RoutingBatch instructions from `.prog` files.
+ *
+ * Each file corresponds to a Processing Element (PE) located at a specific Coordinate.
+ * The loader parses operation codes, switch configurations, and optional loop definitions
+ * to construct a time-based routing schedule for each PE.
+ */
 public class RoutingLoader {
     private static final Logger LOGGER = Logger.getLogger(RoutingLoader.class.getName());
     private static final Pattern FILE_NAME = Pattern.compile("PE-Y(\\d+)X(\\d+)\\.prog");
@@ -36,6 +43,11 @@ public class RoutingLoader {
         this.routingBatches = loadRouting(DEMO_URL);
     }
 
+    /**
+     * Returns the singleton instance of RoutingLoader, initializing it with the demo directory on first call.
+     *
+     * @return the singleton RoutingLoader instance
+     */
     public static RoutingLoader get() {
         if (instance == null) {
             try {
@@ -51,10 +63,23 @@ public class RoutingLoader {
         return routingBatches;
     }
 
+    /**
+     * Reloads the routing data from a specified directory.
+     *
+     * @param p the path to the new directory containing `.prog` files
+     */
     public void refresh(Path p) {
         this.routingBatches = loadRouting(p);
     }
 
+    /**
+     * Loads and parses all `.prog` files from the specified directory into routing batches.
+     *
+     * Files must follow the naming pattern "PE-Y<row>X<col>.prog".
+     *
+     * @param docsDir the directory containing the `.prog` files
+     * @return a map of Coordinate to RoutingBatch
+     */
     private Map<Coordinate, RoutingBatch> loadRouting(Path docsDir) {
         Map<Coordinate, RoutingBatch> routingMap = new LinkedHashMap<>();
         try {
@@ -69,6 +94,13 @@ public class RoutingLoader {
         return routingMap;
     }
 
+    /**
+     * Parses a single `.prog` file and inserts the resulting RoutingBatch
+     * into the provided map, keyed by its Coordinate.
+     *
+     * @param path the path to the `.prog` file
+     * @param routingBatchMap the map to populate with parsed data
+     */
     private void parseRoutingFile(Path path, Map<Coordinate,RoutingBatch> routingBatchMap) {
         String fileName = path.getFileName().toString();
         Matcher fm = FILE_NAME.matcher(fileName);
@@ -143,6 +175,12 @@ public class RoutingLoader {
         routingBatchMap.put(coord, routingBatch);
     }
 
+    /**
+     * Returns the default demo directory from classpath resources.
+     *
+     * @return the path to the demo directory
+     * @throws IllegalStateException if the directory cannot be found or accessed
+     */
     private static Path getDemoDirectory() {
         try {
             URI uri = Objects.requireNonNull(

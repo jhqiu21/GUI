@@ -14,6 +14,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+/**
+ * A utility class for rendering and displaying the Data Flow Graph (DFG) as a PDF image
+ * inside a StackPane.
+ *
+ * This class loads the first page of a specified PDF resource, renders it as a JavaFX
+ * ImageView, and allows users to zoom in and out.
+ *
+ * Internally uses Apache PDFBox for PDF rendering and SwingFXUtils for converting images.
+ */
 public class DFGViewer {
     @FXML
     private StackPane container;

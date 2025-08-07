@@ -6,6 +6,10 @@ import javafx.stage.Window;
 
 import java.io.File;
 
+/**
+ * Handles the process of uploading and loading source code files into the CodeEditor.
+ * Supports both C and Python files via a file chooser dialog.
+ */
 public class ModelUploader {
     private CodeEditor codeEditor;
     public ModelUploader (CodeEditor codeEditor) {

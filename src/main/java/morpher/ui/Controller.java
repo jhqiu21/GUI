@@ -11,7 +11,13 @@ import javafx.scene.layout.StackPane;
 import morpher.ui.visualization.MappingLoader;
 import morpher.ui.visualization.PELoader;
 
-
+/**
+ * The main controller for the Morpher JavaFX application.
+ *
+ * This class wires together the UI components (defined in MainWindow.fxml),
+ * initializes core modules such as the code editor, visualizer, and DFG viewer,
+ * and handles user actions such as file uploads, code compilation, and zooming.
+ */
 public class Controller {
     @FXML private ListView<String> pinnedListView;
     @FXML private StackPane codePane;
@@ -29,6 +35,12 @@ public class Controller {
     private CycleNavigator cycleNavigator;
 
 
+    /**
+     * Initializes all UI components and modules after the FXML has been loaded.
+     *
+     * This method sets up the code editor, visualizer, pinned applications, and
+     * loads the default data flow graph (DFG). It also centers the DFG view.
+     */
     @FXML
     public void initialize() {
         codeEditor = new CodeEditor(codePane);
@@ -65,24 +77,35 @@ public class Controller {
 
     @FXML
     private void onShowMorePinned() {
-        // TODO
+        // TODO: Pinned Application "more" button
     }
 
     @FXML
     private void onUploadToDevice() {
-        // TODO
+        // TODO: upload to device function
     }
 
+    /**
+     * Handles the action of selecting a source file from the file system.
+     *
+     * @param event the action event triggered by the UI
+     */
     @FXML
     private void onSelectFile(ActionEvent event) {
         modelUploader.upload((Node) event.getSource());
     }
 
+    /**
+     * Compiles and runs the uploaded source code (C or Python) and updates the visualization.
+     */
     @FXML
     private void onGenerateAccelerator() {
         codeCompiler.runSourceCode();
     }
 
+    /**
+     * Zooms in on the DFG view.
+     */
     @FXML
     private void onZoomIn() {
         dfgViewer.zoomIn();
@@ -92,6 +115,9 @@ public class Controller {
         });
     }
 
+    /**
+     * Zooms out on the DFG view.
+     */
     @FXML
     private void onZoomOut() {
         dfgViewer.zoomOut();

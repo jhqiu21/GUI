@@ -6,6 +6,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
+/**
+ * A simple UI component for navigating through computation cycles in a fabric matrix.
+ *
+ * Displays the current cycle and provides "Prev" and "Next" buttons to step through cycles.
+ * It is typically bound to a FabricMatrixVisualizer, which handles the underlying logic.
+ */
 public class CycleNavigator extends HBox {
 
     private final Button btnPrev = new Button("Prev");
