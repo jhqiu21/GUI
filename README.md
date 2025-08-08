@@ -18,22 +18,15 @@ Morpher GUI provides a simple, visual workspace for:
 - Memory: 512 MB+ free RAM.
 
 
-## Getting Started:
-Follow these steps to build and run the Morpher GUI on your local machine. 
-
-- Ensure you are using **JDK 17**. (the [Oracle](https://www.oracle.com/java/technologies/downloads/#java17) version or another alternative such as the OpenJDK version)
-- **Fork and clone** this repository to your computer.
-- Open the project in code editor. If you are using an IDE, [configure it to use the JDK 17](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk)
-- **Add Gradle** (if your IDE has not already detected it). You may refer to this [guide](https://se-education.org/guides/tutorials/gradle.html#adding-gradle-to-the-project).
 - Load project dependencies. Either let your IDE run the first Gradle sync automatically, or execute 
     ```
     ./gradlew build
     ```
   from the project root.
-- Run the application by executing the `morpher.ui.Main` to launch the GUI.
+
 
 ## Getting Started
-Follow these steps to build and run Morpher GUI locally.
+Follow these steps to build and run the Morpher GUI on your local machine.
 
 ### Prepare your environment
 - Install JDK 17(the [Oracle](https://www.oracle.com/java/technologies/downloads/#java17) version or another alternative such as the OpenJDK version), set your IDE/project SDK to JDK 17, and confirm with `java -version`.
@@ -46,12 +39,18 @@ Follow these steps to build and run Morpher GUI locally.
    cd MorpherGUI
    ```
 ### Open in your IDE
-   Open the project and configure Project SDK to JDK 17. Let the IDE import it as a Gradle project (or choose “Open with Gradle”).
+   - Open the project and [configure your IDE to use the JDK 17](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk) 
+   - Let the IDE import it as a Gradle project if your IDE has not already detected it. You may refer to this [guide](https://se-education.org/guides/tutorials/gradle.html#adding-gradle-to-the-project).
+   - Load project dependencies. Either let your IDE run the first Gradle sync automatically, or execute
+     ```
+     ./gradlew build
+     ```
+     from the project root.
 
 ### Sync dependencies & build & Run
-   - Build the app using `./gradlew clean build`
-   - Run the app using `./gradlew run`, which launches `morpher.ui.Main` and opens the GUI.
-     - Create a distributable JAR using `./gradlew shadowJar`
+   - Run the app using `./gradlew run` to launche `morpher.ui.Main` and opens the GUI.
+   - (Optional) Create a distributable JAR using `./gradlew shadowJar`
+   - You may also run the application by executing the `morpher.ui.Main` to launch the GUI for testing during development.
 
 Sample resources (DFG PDF, mapping, JSON DIMS, XML) are bundled under resources/docs so you can try the app immediately.
 
