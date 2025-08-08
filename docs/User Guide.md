@@ -62,4 +62,3 @@ The visualization uses three resources (packaged in resources/docs by default):
 - JSON (e.g., `hycube_original_updatemem4x4.json`) to config fabric matrix. Reads the fabric dimensions (`DIMS: { "X": rows, "Y": cols }`).
 - `.prog` files to show operation code and routing information of a PE for each cycle.
 - `mapping.txt`(Not used now) to show the mapping information of PE for each cycle.
-These sample files are bundled for demo. If you ship your own data, keep the same formats.
