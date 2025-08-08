@@ -1,6 +1,22 @@
 # Morpher GUI
 
-![morpher.png](img/morpher.png)
+![morpher.png](docs/img/morpher.png)
+
+## Overview
+Morpher GUI provides a simple, visual workspace for:
+- uploading a source file,
+- viewing & editing the code,
+- compiling/running script (“Generate Accelerator”),
+- inspecting a CGRA fabric mapping cycle-by-cycle,
+- and browsing a DFG(Date Flow Graph) PDF file.
+
+## System requirements
+- OS: macOS, Windows, or Linux
+- Java: JDK 17+ (we recommend 17 LTS).
+- JavaFX: bundled via Gradle; no manual install needed when you run from Gradle or the fat JAR.
+- C toolchain (optional, for Generate Accelerator): gcc available on your PATH.
+- Memory: 512 MB+ free RAM.
+
 
 ## Getting Started:
 Follow these steps to build and run the Morpher GUI on your local machine. 
@@ -15,6 +31,33 @@ Follow these steps to build and run the Morpher GUI on your local machine.
     ```
   from the project root.
 - Run the application by executing the `morpher.ui.Main` to launch the GUI.
+
+## Getting Started
+Follow these steps to build and run Morpher GUI locally.
+
+### Prepare your environment
+- Install JDK 17(the [Oracle](https://www.oracle.com/java/technologies/downloads/#java17) version or another alternative such as the OpenJDK version), set your IDE/project SDK to JDK 17, and confirm with `java -version`.
+- Use the Gradle Wrapper included in the project (`./gradlew` / `gradlew.bat`).
+- If you plan to compile C code, ensure `gcc` is installed and on your PATH.
+
+### Clone the project
+   ```
+   git clone https://github.com/jhqiu21/MorpherGUI.git
+   cd MorpherGUI
+   ```
+### Open in your IDE
+   Open the project and configure Project SDK to JDK 17. Let the IDE import it as a Gradle project (or choose “Open with Gradle”).
+
+### Sync dependencies & build & Run
+   - Build the app using `./gradlew clean build`
+   - Run the app using `./gradlew run`, which launches `morpher.ui.Main` and opens the GUI.
+     - Create a distributable JAR using `./gradlew shadowJar`
+
+Sample resources (DFG PDF, mapping, JSON DIMS, XML) are bundled under resources/docs so you can try the app immediately.
+
+## User Guide
+
+You may find more details in our [user guide](docs/User%20Guide.md).
 
 ## FAQ
 1. "JavaFX runtime components are missing, and are required to run this application"
