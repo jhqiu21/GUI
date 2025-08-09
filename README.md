@@ -56,7 +56,7 @@ Sample resources (DFG PDF, mapping, JSON DIMS, XML) are bundled under resources/
 
 ## User Guide
 
-You may find more details in our [user guide](docs/User%20Guide.md).
+You may find more details in our [user guide](docs/User%20Guide.md). You may use this [script](script/script.py) for testing.
 
 ## FAQ
 1. "JavaFX runtime components are missing, and are required to run this application"
